@@ -1,5 +1,5 @@
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
-use serde::{Serialize};
+use serde::Serialize;
 
 #[derive(Serialize)]
 pub struct Response {
@@ -9,11 +9,10 @@ pub struct Response {
 #[get("/articles")]
 async fn find_articles() -> impl Responder {
     let response = Response {
-        message: "Something".to_string()
+        message: "Something".to_string(),
     };
     HttpResponse::Ok().json(response)
 }
-
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
