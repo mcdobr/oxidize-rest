@@ -1,5 +1,6 @@
 use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 use serde::Serialize;
+use sqlx::postgres::PgPoolOptions;
 
 #[derive(Serialize)]
 pub struct Response {
@@ -16,6 +17,14 @@ async fn find_articles() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+
+    let db = PgPoolOptions::new()
+        .max_connections(10)
+        .connect(&db_url)
+        .await
+        .unwrap();
+
     HttpServer::new(|| App::new().service(find_articles))
         .bind(("127.0.0.1", 8080))?
         .run()
