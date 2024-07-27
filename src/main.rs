@@ -21,3 +21,19 @@ async fn main() -> std::io::Result<()> {
         .run()
         .await
 }
+
+#[cfg(test)]
+mod tests {
+    use actix_web::{test, App};
+
+    use crate::find_articles;
+
+    #[actix_web::test]
+    async fn should_find_articles() {
+        let app = test::init_service(App::new().service(find_articles)).await;
+        let request = test::TestRequest::get().uri("/articles").to_request();
+        let response = test::call_service(&app, request).await;
+
+        assert!(response.status().is_success());
+    }
+}
